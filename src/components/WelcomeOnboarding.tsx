@@ -16,14 +16,14 @@ export default function WelcomeOnboarding({ language, onComplete }: WelcomeOnboa
       titleEn: "Grow Wealth Together",
       titleRw: "Gukurana Ubudahuga",
       descEn: "Turn your cooperative paper ledger into a simple, secure digital fund. Save weekly alongside trusted members of your community.",
-      descRw: "Hindura ikaye y’ikimina cyanyu mu buryo bw’ikoranabuhanga ryizewe. Zigama buri cyumweru ufatanije n’abo wizera mu muryango wawe."
+      descRw: "Hindura ikaye ya terura yanyu mu buryo bw’ikoranabuhanga ryizewe. Zigama buri cyumweru ufatanije n’abo wizera mu muryango wawe."
     },
     {
       icon: <Landmark size={48} className="text-accent stroke-[1.5]" />,
       titleEn: "Affordable Micro-Loans",
       titleRw: "Inguzanyo ziciriritse zoroshye",
       descEn: "Request emergency funds, agricultural pre-orders, or small business kiosk investment directly within your group with friendly community review.",
-      descRw: "Saba inguzanyo z’ingoboka, iz’ubuhinzi cyangwa izo kwagura ubucuruzi bwawe binyuze mu buryo bworoshye n’isuzuma ry’abagize ikimina."
+      descRw: "Saba inguzanyo z’ingoboka, iz’ubuhinzi cyangwa izo kwagura ubucuruzi bwawe binyuze mu buryo bworoshye n’isuzuma ry’abagize terura."
     },
     {
       icon: <Sparkles size={48} className="text-primary stroke-[1.5]" />,

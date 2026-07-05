@@ -48,11 +48,11 @@ export default function ProfileSettings({
         updatedState.users[uIndex].role = role;
         // Adjust name prefix or image based on role to simulate authentic role personas
         if (role === 'admin') {
-          updatedState.users[uIndex].cooperativeName = "Abizerwa Ikimina (Committee)";
-          updatedState.currentUser.cooperativeName = "Abizerwa Ikimina (Committee)";
+          updatedState.users[uIndex].cooperativeName = "Abizerwa Terura (Committee)";
+          updatedState.currentUser.cooperativeName = "Abizerwa Terura (Committee)";
         } else {
-          updatedState.users[uIndex].cooperativeName = "Abizerwa Ikimina";
-          updatedState.currentUser.cooperativeName = "Abizerwa Ikimina";
+          updatedState.users[uIndex].cooperativeName = "Abizerwa Terura";
+          updatedState.currentUser.cooperativeName = "Abizerwa Terura";
         }
       }
     }
@@ -168,7 +168,7 @@ export default function ProfileSettings({
             <User size={12} className="flex-shrink-0" />
             <span>
               {currentUser?.role === 'admin' 
-                ? (language === 'en' ? 'Committee Member' : 'Komite y’Ikimina') 
+                ? (language === 'en' ? 'Committee Member' : 'Komite ya Terura') 
                 : (language === 'en' ? 'Saving Member' : 'Umunyamuryango wo Kuzigama')}
             </span>
           </div>
@@ -239,7 +239,7 @@ export default function ProfileSettings({
 
           <div className="w-full text-left space-y-3.5">
             <div className="flex justify-between text-xs font-semibold">
-              <span className="text-text-secondary">{language === 'en' ? 'Cooperative' : 'Ikimina'}:</span>
+              <span className="text-text-secondary">{language === 'en' ? 'Cooperative' : 'Terura'}:</span>
               <span className="text-oil-black truncate max-w-[180px] text-right">{currentUser?.cooperativeName}</span>
             </div>
             <div className="flex justify-between text-xs font-semibold">
@@ -381,7 +381,7 @@ export default function ProfileSettings({
               className="w-full h-14 md:h-11 border border-red-200 hover:bg-red-50 text-error font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
               <LogOut size={16} className="flex-shrink-0" />
-              <span>{language === 'en' ? 'Sign Out / Sohoka' : 'Sohoka mu Ikimina'}</span>
+              <span>{language === 'en' ? 'Sign Out / Sohoka' : 'Sohoka mu Terura'}</span>
             </button>
           </div>
 

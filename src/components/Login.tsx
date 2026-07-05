@@ -74,12 +74,12 @@ export default function Login({ language, onLanguageChange, onLoginSuccess }: Lo
           <Landmark size={32} className="stroke-[1.5]" />
         </div>
         <h1 className="text-3xl font-bold text-oil-black font-display tracking-tight flex items-center gap-1">
-          Ikimina<span className="text-accent">+</span>
+          Terura
         </h1>
         <p className="text-sm text-text-secondary mt-1 max-w-xs px-2">
           {language === 'en' 
             ? 'Your savings cooperative, digitized with trust.' 
-            : 'Ikimina cyanyu mu buryo bw’ikoranabuhanga n’icyizere.'}
+            : 'Terura yanyu mu buryo bw’ikoranabuhanga n’icyizere.'}
         </p>
       </div>
 

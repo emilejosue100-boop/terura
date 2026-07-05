@@ -28,7 +28,7 @@ export default function AdminDashboard({ state, language, onStateChange, onNavig
       phone: newMemberPhone,
       pin: newMemberPin,
       role: 'member',
-      cooperativeName: "Abizerwa Ikimina",
+      cooperativeName: "Abizerwa Terura",
       savingsBalance: 0,
       profileImage: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=120",
       status: 'active',
@@ -60,7 +60,7 @@ export default function AdminDashboard({ state, language, onStateChange, onNavig
           {language === 'en' ? 'Admin Dashboard' : 'Dashibodi ya Komite'}
         </h2>
         <p className="text-xs text-text-secondary">
-          {language === 'en' ? 'Oversee cooperative growth and process pending approvals' : 'Cunga neza ikigega cy’ikimina n’ubusabe bwose bw’abanyamuryango'}
+          {language === 'en' ? 'Oversee cooperative growth and process pending approvals' : 'Cunga neza ikigega cya terura n’ubusabe bwose bw’abanyamuryango'}
         </p>
       </div>
 
@@ -238,7 +238,7 @@ export default function AdminDashboard({ state, language, onStateChange, onNavig
             </div>
             <div>
               <p className="text-[11px] font-bold text-oil-black uppercase tracking-wide">
-                {language === 'en' ? 'Next Group Assembly' : 'Inama Itaha y’Ikimina'}
+                {language === 'en' ? 'Next Group Assembly' : 'Inama Itaha ya Terura'}
               </p>
               <p className="text-[11px] text-text-secondary leading-normal mt-0.5">
                 {language === 'en' 

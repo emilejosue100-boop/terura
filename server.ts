@@ -68,7 +68,7 @@ app.post('/api/login', (req, res) => {
         phone: phone,
         pin: pin,
         role: (isAlice || phone.includes('admin')) ? 'admin' as const : 'member' as const,
-        cooperativeName: "Abizerwa Ikimina",
+        cooperativeName: "Abizerwa Terura",
         savingsBalance: isAlice ? 320000 : 0,
         profileImage: isAlice 
           ? "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120"
@@ -289,7 +289,7 @@ app.post('/api/generate-tip', async (req, res) => {
     const userTxs = state.transactions.filter(t => t.memberName === state.currentUser?.name);
     const txSummary = userTxs.map(t => `${t.date}: ${t.type} ${t.amount} RWF`).join('\n');
 
-    const prompt = `Generate a supportive financial tip for a rural or semi-urban informal savings cooperative member in Rwanda (Ikimina group) named ${state.currentUser.name}.
+    const prompt = `Generate a supportive financial tip for a rural or semi-urban informal savings cooperative member in Rwanda (Terura group) named ${state.currentUser.name}.
     The member has a personal savings balance of ${state.currentUser.savingsBalance} RWF in the cooperative.
     Their transaction history is:
     ${txSummary || 'No recent contributions'}
@@ -357,7 +357,7 @@ app.post('/api/refresh-opportunities', async (req, res) => {
   try {
     const client = getGeminiClient();
     const prompt = `Scrape and generate 3 realistic, highly curated savings or investment opportunities currently available in Rwanda (e.g. BNR Treasury Bonds, Bank of Kigali dividends, Agricultural collective pre-orders, SACCO micro-savings, or local dairy/coffee processing funds).
-    The opportunities must be tailored for a community-based informal savings cooperative (Ikimina group) looking to invest their idle cash reserves securely.
+    The opportunities must be tailored for a community-based informal savings cooperative (Terura group) looking to invest their idle cash reserves securely.
     Return the response as a JSON array matching this exact TypeScript schema:
     [{
       "id": "string (unique id like opp-123)",
@@ -415,7 +415,7 @@ app.post('/api/analyze-opportunity', async (req, res) => {
     Yield: ${opp.returnRate}
     Description: ${opp.summaryEn}
 
-    Analyze its safety, suitability for a rural informal group (Ikimina) with collective savings of ${state.groupSavings} RWF, and ease of liquidation (withdrawal).
+    Analyze its safety, suitability for a rural informal group (Terura) with collective savings of ${state.groupSavings} RWF, and ease of liquidation (withdrawal).
     Provide a professional, clear response in both English and Kinyarwanda in JSON format matching this exact schema:
     {
       "aiAnalysisEn": "string (Actionable 3-sentence summary of security, liquidity, and recommendation)",

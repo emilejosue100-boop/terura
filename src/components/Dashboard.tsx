@@ -139,7 +139,7 @@ export default function Dashboard({ state, language, onStateChange, onNavigateTo
             {language === 'en' ? `Hello, ${currentUser?.name.split(' ')[0]}` : `Muraho, ${currentUser?.name.split(' ')[0]}`}
           </h2>
           <p className="text-sm text-text-secondary font-medium">
-            {currentUser?.cooperativeName || 'Abizerwa Ikimina'}
+            {currentUser?.cooperativeName || 'Abizerwa Terura'}
           </p>
         </div>
         <img
@@ -394,7 +394,7 @@ export default function Dashboard({ state, language, onStateChange, onNavigateTo
             <p className="text-xs text-text-secondary mb-4">
               {language === 'en' 
                 ? 'Add funds to your shared cooperative account.' 
-                : 'Ongeramo amafaranga mu kigega rusange cy’ikimina.'}
+                : 'Ongeramo amafaranga mu kigega rusange rya terura.'}
             </p>
 
             <form onSubmit={handleSaveSubmit} className="space-y-4">
@@ -449,7 +449,7 @@ export default function Dashboard({ state, language, onStateChange, onNavigateTo
             <p className="text-xs text-text-secondary mb-4">
               {language === 'en' 
                 ? 'Loans are subject to approval by the cooperative committee.' 
-                : 'Inguzanyo zihabwa uburenganzira na komite y’ikimina.'}
+                : 'Inguzanyo zihabwa uburenganzira na komite ya terura.'}
             </p>
 
             <form onSubmit={handleLoanSubmit} className="space-y-4">

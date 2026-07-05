@@ -145,7 +145,7 @@ export default function LoanRequest({ state, language, onStateChange }: LoanRequ
             <p className="text-[11px] text-text-secondary leading-relaxed">
               {language === 'en'
                 ? 'Cooperative loans have a friendly flat 2% interest rate. Repayment parameters are voted collectively during monthly group assemblies.'
-                : 'Inguzanyo z’ikimina zungukirwa ku gipimo cya 2% gusa. Ibihe n’uburyo bwo kwishyura bikemurwa n’inteko rusange y’abanyamuryango.'}
+                : 'Inguzanyo za terura zungukirwa ku gipimo cya 2% gusa. Ibihe n’uburyo bwo kwishyura bikemurwa n’inteko rusange y’abanyamuryango.'}
             </p>
           </div>
         </div>

@@ -31,10 +31,10 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [onboardingCompleted, setOnboardingCompleted] = useState(() => {
-    return localStorage.getItem('ikimina_onboarding_done') === 'true';
+    return localStorage.getItem('terura_onboarding_done') === 'true';
   });
   const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem('ikimina_theme') === 'dark';
+    return localStorage.getItem('terura_theme') === 'dark';
   });
 
   // Fetch state on mount and sync dark mode
@@ -88,13 +88,13 @@ export default function App() {
 
   const handleOnboardingComplete = () => {
     setOnboardingCompleted(true);
-    localStorage.setItem('ikimina_onboarding_done', 'true');
+    localStorage.setItem('terura_onboarding_done', 'true');
   };
 
   const handleLogout = () => {
     setState(prev => prev ? { ...prev, currentUser: null } : null);
     setOnboardingCompleted(false);
-    localStorage.removeItem('ikimina_onboarding_done');
+    localStorage.removeItem('terura_onboarding_done');
   };
 
   if (loading) {
@@ -102,7 +102,7 @@ export default function App() {
       <div className="min-h-screen w-full bg-background flex flex-col items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
         <p className="text-xs font-bold text-text-secondary mt-4 uppercase tracking-wider">
-          Ikimina+ loading...
+          Terura loading...
         </p>
       </div>
     );
@@ -175,7 +175,7 @@ export default function App() {
               darkMode={darkMode}
               onToggleDarkMode={(val) => {
                 setDarkMode(val);
-                localStorage.setItem('ikimina_theme', val ? 'dark' : 'light');
+                localStorage.setItem('terura_theme', val ? 'dark' : 'light');
               }}
             />
           );
@@ -215,7 +215,7 @@ export default function App() {
               darkMode={darkMode}
               onToggleDarkMode={(val) => {
                 setDarkMode(val);
-                localStorage.setItem('ikimina_theme', val ? 'dark' : 'light');
+                localStorage.setItem('terura_theme', val ? 'dark' : 'light');
               }}
             />
           );
@@ -256,7 +256,7 @@ export default function App() {
               <Landmark size={20} />
             </div>
             <div>
-              <span className="text-xl font-bold font-display tracking-tight text-oil-black">Ikimina+</span>
+              <span className="text-xl font-bold font-display tracking-tight text-oil-black">Terura</span>
               <span className="block text-[10px] text-text-secondary font-semibold uppercase tracking-widest mt-0.5">Bilingual Core</span>
             </div>
           </div>
@@ -335,7 +335,7 @@ export default function App() {
           <div className="w-8 h-8 bg-primary text-white rounded-lg flex items-center justify-center shadow-subtle">
             <Landmark size={16} />
           </div>
-          <span className="font-bold font-display tracking-tight text-oil-black text-lg">Ikimina+</span>
+          <span className="font-bold font-display tracking-tight text-oil-black text-lg">Terura</span>
         </div>
 
         <div className="flex items-center gap-2">

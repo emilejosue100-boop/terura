@@ -172,7 +172,7 @@ export default function OpportunityFeed({ state, language, onStateChange }: Oppo
                   <Flag size={14} className={opp.isFlagged ? 'fill-accent' : ''} />
                   <span>
                     {opp.isFlagged 
-                      ? (language === 'en' ? 'Flagged for Vote' : 'Hatorewe Ikimina') 
+                      ? (language === 'en' ? 'Flagged for Vote' : 'Hatorewe Terura') 
                       : (language === 'en' ? 'Flag for Vote' : 'Saba Gutora')}
                   </span>
                 </button>
