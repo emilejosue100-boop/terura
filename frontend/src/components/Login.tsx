@@ -160,6 +160,7 @@ export default function Login({
   };
 
   const showNameField = tab === 'join' || committeeSetup;
+  const configWarning = getApiConfigWarning(displayLanguage);
 
   return (
     <div className="min-h-screen w-full bg-background flex flex-col items-center justify-center p-4">
@@ -234,8 +235,6 @@ export default function Login({
             </p>
           </div>
         )}
-
-  const configWarning = getApiConfigWarning(displayLanguage);
 
         {(configWarning || bootstrapNotice) && (
           <UserNotice
