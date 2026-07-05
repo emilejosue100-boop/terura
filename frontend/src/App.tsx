@@ -37,6 +37,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem('terura_theme') === 'dark';
   });
+  const [bootstrapError, setBootstrapError] = useState<string | null>(null);
 
   // Fetch state on mount and sync dark mode
   useEffect(() => {
@@ -53,12 +54,15 @@ export default function App() {
 
   const fetchState = async () => {
     try {
-      const { ok, data } = await apiGet<GlobalState>('/api/state');
+      const { ok, data, error } = await apiGet<GlobalState>('/api/state', true, 'en', 'general');
       if (ok) {
         setState(data);
+        setBootstrapError(null);
+      } else {
+        setBootstrapError(error ?? null);
       }
-    } catch (err) {
-      console.error("Error loading application state:", err);
+    } catch {
+      setBootstrapError(null);
     } finally {
       setLoading(false);
     }
@@ -118,6 +122,7 @@ export default function App() {
         language={state?.language || 'en'} 
         onLanguageChange={handleLanguageToggle}
         onLoginSuccess={handleLoginSuccess}
+        bootstrapNotice={bootstrapError}
       />
     );
   }

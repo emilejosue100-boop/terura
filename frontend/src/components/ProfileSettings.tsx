@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { GlobalState, Language } from '../types';
 import { apiPost, clearToken } from '../lib/api';
+import UserNotice from './UserNotice';
 import { LogOut, Globe, Camera, Upload, Heart, Moon, Sun, User } from 'lucide-react';
 
 interface ProfileSettingsProps {
@@ -58,15 +59,21 @@ export default function ProfileSettings({
       setLoading(true);
       setUploadError(null);
       try {
-        const { ok, data } = await apiPost<GlobalState>('/api/update-profile-image', { profileImage: base64String });
+        const { ok, data, error } = await apiPost<GlobalState>(
+          '/api/update-profile-image',
+          { profileImage: base64String },
+          true,
+          language,
+          'profile'
+        );
         if (ok) {
           onStateChange(data);
           setShowImageOptions(false);
         } else {
-          setUploadError(language === 'en' ? 'Failed to upload photo.' : 'Gushyiraho ifoto byanze.');
+          setUploadError(error || null);
         }
-      } catch (err) {
-        setUploadError(language === 'en' ? 'Connection error.' : 'Hari ikibazo cy’itumanaho.');
+      } catch {
+        setUploadError(null);
       } finally {
         setLoading(false);
       }
@@ -130,11 +137,7 @@ export default function ProfileSettings({
                 </button>
               </div>
 
-              {uploadError && (
-                <div className="p-2.5 bg-red-50 border border-red-200 text-error text-[10px] font-semibold rounded-lg text-left leading-normal">
-                  {uploadError}
-                </div>
-              )}
+              {uploadError && <UserNotice message={uploadError} />}
 
               <div className="pt-2">
                 <input

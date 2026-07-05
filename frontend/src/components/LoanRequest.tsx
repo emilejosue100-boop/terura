@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GlobalState, Language } from '../types';
-import { apiPost } from '../lib/api';
+import { getUserMessage } from '../lib/userMessages';
 import EmptyState from './EmptyState';
 import { FileText, Send, HelpCircle, Landmark } from 'lucide-react';
 
@@ -34,22 +34,27 @@ export default function LoanRequest({ state, language, onStateChange }: LoanRequ
     setSuccess(null);
 
     try {
-      const { ok, data } = await apiPost<GlobalState>('/api/request-loan', {
-        amount: Number(amount),
-        reasonEn,
-        reasonRw,
-      });
+      const { ok, data, error: apiError } = await apiPost<GlobalState>(
+        '/api/request-loan',
+        {
+          amount: Number(amount),
+          reasonEn,
+          reasonRw,
+        },
+        true,
+        language,
+        'loan'
+      );
 
       if (ok) {
         onStateChange(data);
         setSuccess(language === 'en' ? 'Loan request submitted successfully!' : 'Ibisabwa by’inguzanyo byoherejwe neza!');
         setAmount('');
       } else {
-        const errData = data as GlobalState & { error?: string };
-        setError(errData.error || 'Submission failed');
+        setError(apiError || null);
       }
-    } catch (err) {
-      setError('Connection error');
+    } catch {
+      setError(getUserMessage({ language, code: 'network', context: 'loan' }));
     } finally {
       setLoading(false);
     }
@@ -78,11 +83,7 @@ export default function LoanRequest({ state, language, onStateChange }: LoanRequ
             <span>{language === 'en' ? 'New Request Form' : 'Ohereza ubusabe bushya'}</span>
           </h3>
 
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-error text-xs font-semibold rounded-xl">
-              {error}
-            </div>
-          )}
+          {error && <UserNotice message={error} />}
 
           {success && (
             <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold rounded-xl">

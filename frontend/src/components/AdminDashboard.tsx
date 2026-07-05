@@ -32,12 +32,18 @@ export default function AdminDashboard({ state, language, onStateChange, onNavig
     setSubmitting(true);
     setErrorMsg('');
     try {
-      const { ok, data } = await apiPost<GlobalState & { error?: string }>('/api/add-member', {
-        name: newMemberName,
-        phone: newMemberPhone,
-        pin: newMemberPin,
-        role: newMemberRole,
-      });
+      const { ok, data, error } = await apiPost<GlobalState & { error?: string }>(
+        '/api/add-member',
+        {
+          name: newMemberName,
+          phone: newMemberPhone,
+          pin: newMemberPin,
+          role: newMemberRole,
+        },
+        true,
+        language,
+        'register'
+      );
 
       if (ok) {
         onStateChange(data);
@@ -59,10 +65,10 @@ export default function AdminDashboard({ state, language, onStateChange, onNavig
           setShowAddMemberModal(false);
         }, 1500);
       } else {
-        setErrorMsg(data.error || (language === 'en' ? 'Registration failed' : 'Kwandika byanze'));
+        setErrorMsg(error || null);
       }
     } catch {
-      setErrorMsg(language === 'en' ? 'Connection error' : 'Hari ikibazo cy’itumanaho');
+      setErrorMsg(null);
     } finally {
       setSubmitting(false);
     }

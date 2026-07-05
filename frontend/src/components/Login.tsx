@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Language, GlobalState } from '../types';
 import { apiGet, apiPost, setToken } from '../lib/api';
+import { getUserMessage, getApiConfigWarning } from '../lib/userMessages';
+import UserNotice from './UserNotice';
 import { Shield, Smartphone, Globe, Landmark, User, Users } from 'lucide-react';
 
 type LoginTab = 'signin' | 'join' | 'committee';
@@ -20,9 +22,15 @@ interface LoginProps {
   language: Language;
   onLanguageChange: (lang: Language) => void;
   onLoginSuccess: (updatedState: GlobalState) => void;
+  bootstrapNotice?: string | null;
 }
 
-export default function Login({ language, onLanguageChange, onLoginSuccess }: LoginProps) {
+export default function Login({
+  language,
+  onLanguageChange,
+  onLoginSuccess,
+  bootstrapNotice,
+}: LoginProps) {
   const [displayLanguage, setDisplayLanguage] = useState<Language>(language);
   const [tab, setTab] = useState<LoginTab>('signin');
   const [committeeSetup, setCommitteeSetup] = useState(false);
@@ -38,12 +46,12 @@ export default function Login({ language, onLanguageChange, onLoginSuccess }: Lo
   }, [language]);
 
   useEffect(() => {
-    apiGet<AuthStatus>('/api/auth/status', false).then(({ ok, data }) => {
+    apiGet<AuthStatus>('/api/auth/status', false, displayLanguage, 'general').then(({ ok, data }) => {
       if (ok) {
         setHasAdmin(data.hasAdmin);
       }
     });
-  }, []);
+  }, [displayLanguage]);
 
   const handleLanguageSelect = (lang: Language) => {
     setDisplayLanguage(lang);
@@ -80,33 +88,37 @@ export default function Login({ language, onLanguageChange, onLoginSuccess }: Lo
 
     try {
       if (tab === 'committee' && !committeeSetup) {
-        const { ok, data } = await apiPost<LoginResponse>(
+        const { ok, data, error } = await apiPost<LoginResponse>(
           '/api/login/admin',
           { phone, pin },
-          false
+          false,
+          displayLanguage,
+          'committee'
         );
         if (ok && data.token) {
           setToken(data.token);
           onLoginSuccess(data.state);
         } else {
-          setError(data.error || 'Committee login failed');
+          setError(error || data.error || null);
         }
       } else {
         const mode = tab === 'join' || committeeSetup ? 'register' : 'login';
-        const { ok, data } = await apiPost<LoginResponse>(
+        const { ok, data, error } = await apiPost<LoginResponse>(
           '/api/login',
           { phone, pin, name: name.trim() || undefined, mode },
-          false
+          false,
+          displayLanguage,
+          mode === 'register' ? 'register' : 'login'
         );
         if (ok && data.token) {
           setToken(data.token);
           onLoginSuccess(data.state);
         } else {
-          setError(data.error || 'Login failed');
+          setError(error || data.error || null);
         }
       }
     } catch {
-      setError(displayLanguage === 'en' ? 'Connection error' : 'Hari ikibazo cy’itumanaho');
+      setError(getUserMessage({ language: displayLanguage, code: 'network', context: 'login' }));
     } finally {
       setLoading(false);
     }
@@ -223,11 +235,16 @@ export default function Login({ language, onLanguageChange, onLoginSuccess }: Lo
           </div>
         )}
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-error text-xs rounded-xl font-medium">
-            {error}
-          </div>
+  const configWarning = getApiConfigWarning(displayLanguage);
+
+        {(configWarning || bootstrapNotice) && (
+          <UserNotice
+            message={configWarning || bootstrapNotice || ''}
+            variant={configWarning ? 'warning' : 'error'}
+          />
         )}
+
+        {error && <UserNotice message={error} />}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {showNameField && (

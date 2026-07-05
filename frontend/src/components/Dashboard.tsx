@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { GlobalState, Language } from '../types';
 import { apiPost } from '../lib/api';
+import { getUserMessage } from '../lib/userMessages';
+import UserNotice from './UserNotice';
 import EmptyState from './EmptyState';
 import { ArrowDownRight, ArrowUpRight, Lightbulb, Wallet, Plus, ChevronRight, RefreshCw, X, Sparkles, Check, PiggyBank } from 'lucide-react';
 
@@ -23,6 +25,7 @@ export default function Dashboard({ state, language, onStateChange, onNavigateTo
   const [saveLoading, setSaveLoading] = useState(false);
   const [loanLoading, setLoanLoading] = useState(false);
   const [repayLoading, setRepayLoading] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   // Filter approved loans for current user that are not yet repaid
   const userApprovedLoans = state.loanRequests.filter(
@@ -40,13 +43,22 @@ export default function Dashboard({ state, language, onStateChange, onNavigateTo
 
   const handleRepayLoanSubmit = async (loanId: string) => {
     setRepayLoading(true);
+    setActionError(null);
     try {
-      const { ok, data } = await apiPost<GlobalState>('/api/repay-loan', { id: loanId });
+      const { ok, data, error } = await apiPost<GlobalState>(
+        '/api/repay-loan',
+        { id: loanId },
+        true,
+        language,
+        'repay'
+      );
       if (ok) {
         onStateChange(data);
+      } else {
+        setActionError(error || null);
       }
-    } catch (err) {
-      console.error("Error repaying loan:", err);
+    } catch {
+      setActionError(getUserMessage({ language, code: 'network', context: 'repay' }));
     } finally {
       setRepayLoading(false);
     }
@@ -60,15 +72,24 @@ export default function Dashboard({ state, language, onStateChange, onNavigateTo
     if (!saveAmount || isNaN(Number(saveAmount)) || Number(saveAmount) <= 0) return;
 
     setSaveLoading(true);
+    setActionError(null);
     try {
-      const { ok, data } = await apiPost<GlobalState>('/api/save', { amount: Number(saveAmount) });
+      const { ok, data, error } = await apiPost<GlobalState>(
+        '/api/save',
+        { amount: Number(saveAmount) },
+        true,
+        language,
+        'save'
+      );
       if (ok) {
         onStateChange(data);
         setShowSaveModal(false);
         setSaveAmount('');
+      } else {
+        setActionError(error || null);
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
+      setActionError(getUserMessage({ language, code: 'network', context: 'save' }));
     } finally {
       setSaveLoading(false);
     }
@@ -79,19 +100,28 @@ export default function Dashboard({ state, language, onStateChange, onNavigateTo
     if (!loanAmount || isNaN(Number(loanAmount)) || Number(loanAmount) <= 0) return;
 
     setLoanLoading(true);
+    setActionError(null);
     try {
-      const { ok, data } = await apiPost<GlobalState>('/api/request-loan', {
-        amount: Number(loanAmount),
-        reasonEn: loanReasonEn,
-        reasonRw: loanReasonRw,
-      });
+      const { ok, data, error } = await apiPost<GlobalState>(
+        '/api/request-loan',
+        {
+          amount: Number(loanAmount),
+          reasonEn: loanReasonEn,
+          reasonRw: loanReasonRw,
+        },
+        true,
+        language,
+        'loan'
+      );
       if (ok) {
         onStateChange(data);
         setShowLoanModal(false);
         setLoanAmount('');
+      } else {
+        setActionError(error || null);
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
+      setActionError(getUserMessage({ language, code: 'network', context: 'loan' }));
     } finally {
       setLoanLoading(false);
     }
@@ -118,6 +148,7 @@ export default function Dashboard({ state, language, onStateChange, onNavigateTo
 
   return (
     <div className="space-y-6">
+      {actionError && <UserNotice message={actionError} />}
       {/* Welcome Header */}
       <div className="flex justify-between items-center">
         <div>

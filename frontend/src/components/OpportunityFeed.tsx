@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { GlobalState, Language, Opportunity } from '../types';
 import { apiPost } from '../lib/api';
 import EmptyState from './EmptyState';
+import UserNotice from './UserNotice';
 import { Sparkles, Flag, RefreshCw, Layers, Search } from 'lucide-react';
 
 interface OpportunityFeedProps {
@@ -20,19 +21,20 @@ export default function OpportunityFeed({ state, language, onStateChange }: Oppo
     setRefreshing(true);
     setRefreshError(null);
     try {
-      const { ok, data } = await apiPost<GlobalState & { error?: string; code?: string }>('/api/refresh-opportunities');
+      const { ok, data, error } = await apiPost<GlobalState & { error?: string; code?: string }>(
+        '/api/refresh-opportunities',
+        undefined,
+        true,
+        language,
+        'opportunity'
+      );
       if (ok) {
         onStateChange(data);
       } else {
-        setRefreshError(data.error || (language === 'en'
-          ? 'Could not refresh opportunities. Try again later.'
-          : 'Ntibyashoboye kuvugurura amahirwe. Ongera ugerageze.'));
+        setRefreshError(error || null);
       }
-    } catch (err) {
-      console.error(err);
-      setRefreshError(
-        language === 'en' ? 'Connection error while refreshing.' : 'Hari ikibazo cy’itumanaho mu kuvugurura.'
-      );
+    } catch {
+      setRefreshError(null);
     } finally {
       setRefreshing(false);
     }
@@ -95,11 +97,7 @@ export default function OpportunityFeed({ state, language, onStateChange }: Oppo
         </button>
       </div>
 
-      {refreshError && (
-        <div className="p-3 bg-red-50 border border-red-200 text-error text-xs rounded-xl font-medium">
-          {refreshError}
-        </div>
-      )}
+      {refreshError && <UserNotice message={refreshError} />}
 
       {/* Main Grid display of cards */}
       {opportunities.length === 0 ? (

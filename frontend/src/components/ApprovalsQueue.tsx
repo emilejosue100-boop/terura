@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { GlobalState, Language } from '../types';
 import { apiPost } from '../lib/api';
 import EmptyState from './EmptyState';
+import UserNotice from './UserNotice';
 import { CheckCircle2, XCircle, Clock, AlertTriangle, Hourglass } from 'lucide-react';
 
 interface ApprovalsQueueProps {
@@ -14,17 +15,22 @@ export default function ApprovalsQueue({ state, language, onStateChange }: Appro
   const { loanRequests } = state;
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
+  const [actionError, setActionError] = useState<string | null>(null);
+
   const handleAction = async (id: string, approve: boolean) => {
     setActionLoading(id);
+    setActionError(null);
     try {
       const endpoint = approve ? '/api/approve-loan' : '/api/decline-loan';
-      const { ok, data } = await apiPost<GlobalState>(endpoint, { id });
+      const { ok, data, error } = await apiPost<GlobalState>(endpoint, { id }, true, language, 'approve');
 
       if (ok) {
         onStateChange(data);
+      } else {
+        setActionError(error || null);
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
+      setActionError(null);
     } finally {
       setActionLoading(null);
     }
@@ -62,6 +68,8 @@ export default function ApprovalsQueue({ state, language, onStateChange }: Appro
           </p>
         </div>
       </div>
+
+      {actionError && <UserNotice message={actionError} />}
 
       {/* Pending Queue Section */}
       <div className="space-y-3">
