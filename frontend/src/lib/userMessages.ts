@@ -1,4 +1,5 @@
 import type { Language } from '../types';
+import { HAS_API_PROXY } from '../generated/apiProxy';
 
 export type MessageContext =
   | 'login'
@@ -177,10 +178,9 @@ export function getUserMessage(input: UserMessageInput): string {
 }
 
 export function getApiConfigWarning(language: Language): string | null {
-  if (!import.meta.env.PROD || import.meta.env.VITE_API_URL) {
-    return null;
-  }
+  if (!import.meta.env.PROD) return null;
+  if (import.meta.env.VITE_API_URL || HAS_API_PROXY) return null;
   return language === 'rw'
-    ? 'Terura ntiboneka — seriveri ntiyashyizweho neza. Menyesha komite yawe.'
-    : 'Terura cannot reach the server — deployment may be misconfigured. Contact your committee.';
+    ? 'Terura ntiboneka — reba niba BACKEND_URL yashyizweho kuri Vercel.'
+    : 'Terura cannot reach the server — set BACKEND_URL on Vercel to your Render API URL, then redeploy.';
 }

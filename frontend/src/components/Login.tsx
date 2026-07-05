@@ -236,14 +236,12 @@ export default function Login({
           </div>
         )}
 
-        {(configWarning || bootstrapNotice) && (
+        {(error || bootstrapNotice || configWarning) && (
           <UserNotice
-            message={configWarning || bootstrapNotice || ''}
-            variant={configWarning ? 'warning' : 'error'}
+            message={error || bootstrapNotice || configWarning || ''}
+            variant={error || bootstrapNotice ? 'error' : 'warning'}
           />
         )}
-
-        {error && <UserNotice message={error} />}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {showNameField && (
