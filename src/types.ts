@@ -32,6 +32,9 @@ export interface LoanRequest {
   reasonEn: string;
   reasonRw: string;
   status: 'pending' | 'approved' | 'declined';
+  repaymentDueDate?: string;
+  repaid?: boolean;
+  repaidAmount?: number;
 }
 
 export interface Opportunity {

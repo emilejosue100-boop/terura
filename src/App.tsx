@@ -33,11 +33,22 @@ export default function App() {
   const [onboardingCompleted, setOnboardingCompleted] = useState(() => {
     return localStorage.getItem('ikimina_onboarding_done') === 'true';
   });
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem('ikimina_theme') === 'dark';
+  });
 
-  // Fetch state on mount
+  // Fetch state on mount and sync dark mode
   useEffect(() => {
     fetchState();
   }, []);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
 
   const fetchState = async () => {
     try {
@@ -161,6 +172,11 @@ export default function App() {
               onLanguageChange={handleLanguageToggle}
               onStateChange={setState}
               onLogout={handleLogout}
+              darkMode={darkMode}
+              onToggleDarkMode={(val) => {
+                setDarkMode(val);
+                localStorage.setItem('ikimina_theme', val ? 'dark' : 'light');
+              }}
             />
           );
         default:
@@ -196,6 +212,11 @@ export default function App() {
               onLanguageChange={handleLanguageToggle}
               onStateChange={setState}
               onLogout={handleLogout}
+              darkMode={darkMode}
+              onToggleDarkMode={(val) => {
+                setDarkMode(val);
+                localStorage.setItem('ikimina_theme', val ? 'dark' : 'light');
+              }}
             />
           );
         default:
@@ -227,7 +248,7 @@ export default function App() {
     <div className="min-h-screen bg-background text-oil-black flex flex-col md:flex-row font-sans">
       
       {/* Desktop Left Sidebar Navigation */}
-      <aside className="hidden md:flex md:w-64 bg-white border-r border-border-subtle flex-col justify-between p-6 h-screen sticky top-0">
+      <aside className="hidden md:flex md:w-64 bg-surface border-r border-border-subtle flex-col justify-between p-6 h-screen sticky top-0">
         <div>
           {/* Logo Brand */}
           <div className="flex items-center gap-2.5 mb-8">
@@ -261,15 +282,40 @@ export default function App() {
 
         {/* Sidebar Footer User detail & Logout */}
         <div className="pt-6 border-t border-border-subtle flex flex-col gap-3">
-          <div className="flex items-center gap-2.5">
-            <img
-              src={currentUser.profileImage}
-              alt={currentUser.name}
-              className="w-8 h-8 rounded-full object-cover border border-border-subtle"
-            />
-            <div className="truncate">
-              <span className="block text-xs font-bold text-oil-black truncate">{currentUser.name}</span>
-              <span className="block text-[10px] text-text-secondary capitalize font-semibold">{currentUser.role} Account</span>
+          <div className="flex items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <img
+                src={currentUser.profileImage}
+                alt={currentUser.name}
+                onClick={() => setActiveTab('profile')}
+                className="w-8 h-8 rounded-full object-cover border border-border-subtle cursor-pointer hover:opacity-80 transition-all flex-shrink-0"
+              />
+              <div className="truncate">
+                <span className="block text-xs font-bold text-oil-black truncate">{currentUser.name}</span>
+                <span className="block text-[10px] text-text-secondary capitalize font-semibold">{currentUser.role} Account</span>
+              </div>
+            </div>
+
+            {/* Desktop Quick Language Selector */}
+            <div className="flex bg-background border border-border-subtle rounded-full p-0.5 flex-shrink-0">
+              <button
+                onClick={() => handleLanguageToggle('en')}
+                className={`px-1.5 py-0.5 text-[9px] font-bold rounded-full transition-all ${
+                  language === 'en' ? 'bg-primary text-white shadow-subtle' : 'text-text-secondary hover:text-oil-black'
+                }`}
+                title="English"
+              >
+                EN
+              </button>
+              <button
+                onClick={() => handleLanguageToggle('rw')}
+                className={`px-1.5 py-0.5 text-[9px] font-bold rounded-full transition-all ${
+                  language === 'rw' ? 'bg-primary text-white shadow-subtle' : 'text-text-secondary hover:text-oil-black'
+                }`}
+                title="Kinyarwanda"
+              >
+                RW
+              </button>
             </div>
           </div>
 
@@ -284,7 +330,7 @@ export default function App() {
       </aside>
 
       {/* Mobile Top Header */}
-      <header className="md:hidden bg-white border-b border-border-subtle h-16 px-4 flex items-center justify-between sticky top-0 z-40">
+      <header className="md:hidden bg-surface border-b border-border-subtle h-16 px-4 flex items-center justify-between sticky top-0 z-40">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-primary text-white rounded-lg flex items-center justify-center shadow-subtle">
             <Landmark size={16} />
@@ -314,7 +360,7 @@ export default function App() {
             src={currentUser.profileImage}
             alt={currentUser.name}
             onClick={() => setActiveTab('profile')}
-            className="w-7 h-7 rounded-full object-cover border border-border-subtle shadow-pressed"
+            className="w-7 h-7 rounded-full object-cover border border-border-subtle shadow-pressed cursor-pointer"
           />
         </div>
       </header>
@@ -325,7 +371,7 @@ export default function App() {
       </main>
 
       {/* Mobile Bottom Navigation Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-border-subtle h-16 flex items-center justify-around px-2 z-40 shadow-subtle">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-border-subtle h-16 flex items-center justify-around px-2 z-40 shadow-subtle">
         {activeNavItems.map((item) => (
           <button
             key={item.id}

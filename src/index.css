@@ -4,23 +4,40 @@
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
   --font-display: "DM Sans", "Inter", sans-serif;
   
-  --color-background: #FAF9F6;
-  --color-oil-black: #1A1A1A;
-  --color-surface: #FFFFFF;
+  --color-background: var(--bg-background);
+  --color-oil-black: var(--bg-oil-black);
+  --color-surface: var(--bg-surface);
   --color-primary: #1F5C3F;
   --color-primary-hover: #174A32;
   --color-accent: #C9A227;
   --color-success: #2E7D32;
   --color-warning: #B26A00;
   --color-error: #B3261E;
-  --color-border-subtle: #E4E1DA;
-  --color-text-secondary: #5C5C5C;
+  --color-border-subtle: var(--bg-border-subtle);
+  --color-text-secondary: var(--bg-text-secondary);
+}
+
+:root {
+  --bg-background: #FAF9F6;
+  --bg-oil-black: #1A1A1A;
+  --bg-surface: #FFFFFF;
+  --bg-border-subtle: #E4E1DA;
+  --bg-text-secondary: #5C5C5C;
+}
+
+.dark {
+  --bg-background: #111412;
+  --bg-oil-black: #F1F4F2;
+  --bg-surface: #19201C;
+  --bg-border-subtle: #2C3530;
+  --bg-text-secondary: #9AA59F;
 }
 
 body {
   background-color: var(--color-background);
   color: var(--color-oil-black);
   font-family: var(--font-sans);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 h1, h2, h3, h4, .font-display {

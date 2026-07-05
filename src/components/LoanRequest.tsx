@@ -75,10 +75,10 @@ export default function LoanRequest({ state, language, onStateChange }: LoanRequ
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         {/* Left Side: Submission Form */}
-        <div className="md:col-span-5 bg-white border border-border-subtle rounded-xl p-6 shadow-subtle h-fit">
+        <div className="md:col-span-5 bg-surface border border-border-subtle rounded-xl p-6 shadow-subtle h-fit">
           <h3 className="text-sm font-bold font-display text-oil-black mb-4 flex items-center gap-1.5">
-            <Send size={16} className="text-primary" />
-            {language === 'en' ? 'New Request Form' : 'Ohereza ubusabe bushya'}
+            <Send size={16} className="text-primary flex-shrink-0" />
+            <span>{language === 'en' ? 'New Request Form' : 'Ohereza ubusabe bushya'}</span>
           </h3>
 
           {error && (
@@ -133,9 +133,9 @@ export default function LoanRequest({ state, language, onStateChange }: LoanRequ
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-11 bg-primary text-white font-semibold rounded-xl text-xs hover:bg-primary-hover active:scale-[0.98] transition-all flex items-center justify-center shadow-subtle"
+              className="w-full h-14 md:h-11 bg-primary text-white font-bold rounded-xl text-xs hover:bg-primary-hover active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-subtle cursor-pointer"
             >
-              {loading ? '...' : (language === 'en' ? 'Submit Application' : 'Ohereza Ubusabe')}
+              <span>{loading ? '...' : (language === 'en' ? 'Submit Application' : 'Ohereza Ubusabe')}</span>
             </button>
           </form>
 
@@ -151,7 +151,7 @@ export default function LoanRequest({ state, language, onStateChange }: LoanRequ
         </div>
 
         {/* Right Side: Requests History Queue */}
-        <div className="md:col-span-7 bg-white border border-border-subtle rounded-xl p-6 shadow-subtle">
+        <div className="md:col-span-7 bg-surface border border-border-subtle rounded-xl p-6 shadow-subtle">
           <h3 className="text-sm font-bold font-display text-oil-black mb-4">
             {language === 'en' ? 'Your Applications' : 'Ubusabe bwawe bwose'}
           </h3>
@@ -162,39 +162,61 @@ export default function LoanRequest({ state, language, onStateChange }: LoanRequ
             </div>
           ) : (
             <div className="space-y-4">
-              {userLoans.map((loan) => (
-                <div key={loan.id} className="border border-border-subtle rounded-xl p-4 hover:bg-background/45 transition-all">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <span className="text-xs text-text-secondary block font-medium">{loan.date}</span>
-                      <span className="text-base font-bold text-oil-black">{formatRwf(loan.requestedAmount)}</span>
+              {userLoans.map((loan) => {
+                const dueDate = loan.repaymentDueDate || (() => {
+                  const d = new Date(loan.date);
+                  d.setDate(d.getDate() + 30);
+                  return d.toISOString().split('T')[0];
+                })();
+
+                return (
+                  <div key={loan.id} className="border border-border-subtle rounded-xl p-4 hover:bg-background/45 transition-all bg-background">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <span className="text-xs text-text-secondary block font-medium">{loan.date}</span>
+                        <span className="text-base font-bold text-oil-black">{formatRwf(loan.requestedAmount)}</span>
+                      </div>
+
+                      <div className="flex flex-col items-end gap-1.5">
+                        <span className={`text-[10px] font-bold uppercase px-2.5 py-1 rounded-full border ${
+                          loan.status === 'approved' 
+                            ? 'bg-emerald-50 text-emerald-800 border-emerald-200' 
+                            : (loan.status === 'declined' 
+                              ? 'bg-red-50 text-error border-red-200' 
+                              : 'bg-amber-50 text-warning border-amber-200')
+                        }`}>
+                          {loan.status === 'approved' 
+                            ? (language === 'en' ? 'Approved' : 'Byemejwe') 
+                            : (loan.status === 'declined' 
+                              ? (language === 'en' ? 'Declined' : 'Byanze') 
+                              : (language === 'en' ? 'Pending' : 'Irasuzumwa'))}
+                        </span>
+
+                        {loan.status === 'approved' && (
+                          <span className={`text-[9px] font-bold px-2 py-0.5 rounded-md border ${
+                            loan.repaid 
+                              ? 'bg-neutral-100 text-neutral-600 border-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-750'
+                              : 'bg-primary/10 text-primary border-primary/20'
+                          }`}>
+                            {loan.repaid 
+                              ? (language === 'en' ? 'Fully Repaid' : 'Yishyuwe yose')
+                              : (language === 'en' ? `Due: ${dueDate}` : `Kwishyura: ${dueDate}`)}
+                          </span>
+                        )}
+                      </div>
                     </div>
 
-                    <span className={`text-[10px] font-bold uppercase px-2.5 py-1 rounded-full ${
-                      loan.status === 'approved' 
-                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
-                        : (loan.status === 'declined' 
-                          ? 'bg-red-50 text-error border border-red-200' 
-                          : 'bg-amber-50 text-warning border border-amber-200')
-                    }`}>
-                      {loan.status === 'approved' 
-                        ? (language === 'en' ? 'Approved' : 'Byemejwe') 
-                        : (loan.status === 'declined' 
-                          ? (language === 'en' ? 'Declined' : 'Byanze') 
-                          : (language === 'en' ? 'Pending Committee' : 'Biracyasuzumwa'))}
-                    </span>
+                    <div className="bg-surface border border-border-subtle/50 rounded-xl p-3 mt-3">
+                      <span className="text-[10px] font-bold text-text-secondary uppercase block mb-0.5">
+                        {language === 'en' ? 'Stated Purpose' : 'Impamvu yanditswe'}
+                      </span>
+                      <p className="text-xs text-oil-black leading-relaxed">
+                        {language === 'en' ? loan.reasonEn : loan.reasonRw}
+                      </p>
+                    </div>
                   </div>
-
-                  <div className="bg-background border border-border-subtle/50 rounded-xl p-3 mt-3">
-                    <span className="text-[10px] font-bold text-text-secondary uppercase block mb-0.5">
-                      {language === 'en' ? 'Stated Purpose' : 'Impamvu yanditswe'}
-                    </span>
-                    <p className="text-xs text-oil-black leading-relaxed">
-                      {language === 'en' ? loan.reasonEn : loan.reasonRw}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

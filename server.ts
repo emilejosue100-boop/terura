@@ -161,6 +161,13 @@ app.post('/api/approve-loan', (req, res) => {
   }
 
   loan.status = 'approved';
+  
+  // Set repayment due date (30 days from request date)
+  const reqDate = new Date(loan.date);
+  reqDate.setDate(reqDate.getDate() + 30);
+  loan.repaymentDueDate = reqDate.toISOString().split('T')[0];
+  loan.repaid = false;
+
   state.groupSavings -= loan.requestedAmount;
   state.activeLoansCount += 1;
   state.activeLoansAmount += loan.requestedAmount;
@@ -182,7 +189,7 @@ app.post('/api/approve-loan', (req, res) => {
   if (targetUser) {
     // If the approved borrower is the current session user, sync
     if (state.currentUser && state.currentUser.name === targetUser.name) {
-      // Loan disbursed as deposit or cash, in this flow let's log the transaction
+      // Loan disbursed
     }
   }
 
@@ -199,6 +206,64 @@ app.post('/api/decline-loan', (req, res) => {
 
   loan.status = 'declined';
   res.json(state);
+});
+
+// Member repays loan
+app.post('/api/repay-loan', (req, res) => {
+  const { id } = req.body;
+  const loan = state.loanRequests.find(l => l.id === id);
+  if (!loan) {
+    return res.status(404).json({ error: 'Loan request not found' });
+  }
+
+  loan.repaid = true;
+  loan.repaidAmount = loan.requestedAmount;
+  state.groupSavings += loan.requestedAmount;
+  state.activeLoansCount = Math.max(0, state.activeLoansCount - 1);
+  state.activeLoansAmount = Math.max(0, state.activeLoansAmount - loan.requestedAmount);
+
+  // Add transaction logging the repayment
+  const repayTx: Transaction = {
+    id: `tx-repay-${Date.now()}`,
+    date: new Date().toISOString().split('T')[0],
+    type: 'repaid_loan',
+    amount: loan.requestedAmount,
+    runningBalance: state.currentUser ? state.currentUser.savingsBalance : 0,
+    memberName: loan.memberName,
+    status: 'success'
+  };
+  state.transactions.unshift(repayTx);
+
+  res.json(state);
+});
+
+// Member updates profile picture
+app.post('/api/update-profile-image', (req, res) => {
+  const { profileImage } = req.body;
+  if (!profileImage) {
+    return res.status(400).json({ error: 'Profile image is required' });
+  }
+
+  if (state.currentUser) {
+    state.currentUser.profileImage = profileImage;
+    
+    // Update in users list
+    const uIndex = state.users.findIndex(u => u.phone === state.currentUser?.phone);
+    if (uIndex !== -1) {
+      state.users[uIndex].profileImage = profileImage;
+    }
+
+    // Update in existing loan requests for consistency
+    state.loanRequests.forEach(l => {
+      if (l.memberName === state.currentUser?.name) {
+        l.memberImage = profileImage;
+      }
+    });
+
+    res.json(state);
+  } else {
+    res.status(401).json({ error: 'Not authenticated' });
+  }
 });
 
 // Flag / Unflag opportunity for group vote
