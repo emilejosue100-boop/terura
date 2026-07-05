@@ -11,6 +11,7 @@ services:
     region: frankfurt
     plan: free
     rootDir: backend
+    # Must use "npm run build" — "npm build" is not a valid npm command
     buildCommand: npm install && npm run build
     startCommand: npm run start
     healthCheckPath: /health
