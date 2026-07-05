@@ -58,7 +58,7 @@ export default function ApprovalsQueue({ state, language, onStateChange }: Appro
           <p className="text-[11px] text-text-secondary leading-relaxed mt-0.5">
             {language === 'en'
               ? 'Requests require verification of the borrower’s regular contributions. Ensure total collective outstanding credit does not exceed 35% of total cooperative fund reserves.'
-              : 'Gusuzuma inguzanyo bisaba kubanza kureba niba uwasabye asanzwe atanga umusanzu we neza. Inguzanyo zose ntizigomba kurenga 35% by’ikigega cyose cy’ikimina.'}
+              : 'Gusuzuma inguzanyo bisaba kubanza kureba niba uwasabye asanzwe atanga umusanzu we neza. Inguzanyo zose ntizigomba kurenga 35% by’ikigega cyose rya terura.'}
           </p>
         </div>
       </div>
