@@ -154,7 +154,7 @@ MONGODB_URI=mongodb+srv://...
 JWT_SECRET=your-long-random-secret
 GEMINI_API_KEY=AIza...
 FIRECRAWL_API_KEY=fc-...
-FRONTEND_URL=http://localhost:5173
+FRONTEND_URL=https://terura.vercel.app
 ADMIN_PHONE=0788123456
 ```
 
@@ -184,8 +184,8 @@ npm run dev
 
 | Service | URL |
 |---------|-----|
-| Frontend | http://localhost:5173 |
-| Backend | http://localhost:5000 |
+| Frontend | https://terura.vercel.app |
+| Backend | https://terura.onrender.com |
 | Health check | http://localhost:5000/health |
 
 Leave `frontend/.env` empty locally — Vite proxies `/api` to the backend automatically.
